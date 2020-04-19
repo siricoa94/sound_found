@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Found</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+<body>
+    <nav id="nav">
+        <h1 id="welcomeTitle">Sound Found</h1>
+        <input id="input">
+        <button id="select">Seek</button>
+    </nav>
+    <div class="container" id="topCont">
+        <p class="arrowP"><i class="arrow left"></i></p>
+        <div id="deezerResponseContainer" >
+
+        </div>
+        <p class="arrowP"><i class="arrow right"></i></p>
+
+    </div>
+    <div id="contributionsInner">
+        <div id="contInBox">
+            <div class="link"><a target="_blank" href="https://www.deezer.com/us/">Deezer.com</a><p>Deezer provides an Application Program Interface, which is used to provide the song samples, album covers and information, as well as artist name.</p></div>
+        </div>
+        <div id="contInBox">
+            <div class="link"><a target="_blank" href="https://rapidapi.com/">Rapidapi.com</a><p>Rapidapi is an easy-to-use API key generator for many websites. Feel free to click the link above and check it out for yourself!</p></div>
+        </div>
+    </div>
+
+</body>
+<script>
+  let container = document.getElementById("container");
+  $("#select").on("click", function(){
+    let input = $('#input').val();
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://deezerdevs-deezer.p.rapidapi.com/search?q="+ input,
+        "method": "GET",
+        "headers": {
+            "x-rapidapi-host": "Secret",
+            "x-rapidapi-key": "Secret"
+        }
+    }
+    console.log("here is your input" + input);
+    $.ajax(settings).then(function (response) {
+        $("#deezerResponseContainer").empty();
+        console.log(response);
+        let newVar = JSON.stringify(response.data);
+        for(i = 0; i < newVar.length; i++){
+        $("#deezerResponseContainer").append("<div class='appendContainer'><div><img src="+ response.data[i].album.cover_medium +"></div><div><audio controls><source src="+response.data[i].preview+"></audio></div><div>"+ response.data[i].artist.name +"</div><div>"+ response.data[i].album.title +"</div><a href="+ response.data[i].link +">"+ response.data[i].link +"<a></div>");
+        };
+        console.log(newVar);
+    });
+    $("html, body").animate({scrollTop: container}, 1200);
+  });
+  $(".arrow").on('click', function(){
+      let classClick = $(this).attr("class");
+      console.log(classClick);
+    //   alert("i work");
+      if(classClick === "arrow right"){
+        //   alert("I am Right");
+          $("#deezerResponseContainer").animate({scrollLeft: "+=400px"}, 600);
+
+      } else {
+        $("#deezerResponseContainer").animate({scrollLeft: "-=400px"}, 600);
+      };
+  });
+
+</script>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        outline: 0;
+        font-size: 100%;
+        vertical-align: baseline;
+        background: transparent;
+        background-color: rgb(54, 54, 54);
+        height: 190vh
+    }
+    nav{
+        height: 50px;
+        width: 100%;
+        background-color: rgb(54, 54, 54);
+        padding: 10px 0px 10px 0px;
+        display: flex;
+        justify-content: center;
+        position: fixed;
+        z-index: 1;
+    }
+    #input{
+        background-color: rgb(199, 199, 199);
+        border-radius: 25rem;
+        color: rgb(73, 73, 73);
+        font-weight: 900;
+        font-size: larger;
+        text-shadow: 1px 1px rgb(255, 255, 255);
+        outline: none;
+        padding: 10px;
+    }
+    #select{
+        background-color: rgb(199, 199, 199);
+        border-radius: 50%;
+        margin-left: 5px;
+        outline: none;
+    }
+    #topCont{
+        background-color: black;
+        padding: 125px 0px 50px 0px;
+    }
+    #welcomeTitle {
+        color: rgb(224, 224, 224);
+        width: 400px;
+    }
+    .container{
+        display: flex;
+        justify-content: center;
+        height: 120vh;
+    }
+    .appendContainer{
+        display: inline;
+        justify-content: center;
+        text-align: center;
+        margin: 20px;
+        background-color: rgba(255, 255, 255, 0.753);
+        box-shadow: 2px 2px black;
+        border-radius: .25rem;
+        padding: 10px;
+    }
+    #deezerResponseContainer{
+        display: flex;
+        justify-content: space-between;
+        overflow: auto;
+        width: 80%;
+        height: 500px;
+        margin: 5px 35px 40px 35px;
+        background-image: linear-gradient(rgb(26, 25, 25), rgb(49, 49, 49));
+        border-radius: 5rem;
+        padding: 75px 0px 0px 0px;
+    }
+    #deezerResponseContainer::-webkit-scrollbar{
+        background-color: transparent;
+        padding: 20px;
+    }
+    i {
+        display: inline-block;
+        height: 80px;
+        width: 80px;
+    }
+    .arrowP {
+        margin-top: 185px;
+        margin-right: 20px;
+        margin-left: 20px;
+    }
+    .left {
+        width: 0;
+        height: 0;
+        border-top: 100px solid transparent;
+        border-right: 100px double rgb(224, 224, 224);
+        border-bottom: 100px solid transparent;
+        }
+    .left:hover{
+        transform: scale(1.15);
+        cursor: pointer;
+        transition: all 0.5s ease-in-out;
+    }
+    .right {
+        width: 0;
+        height: 0;
+        border-top: 100px solid transparent;
+        border-left: 100px double rgb(224, 224, 224);
+        border-bottom: 100px solid transparent;
+    }
+    .right:hover{
+        transform: scale(1.15);
+        cursor: pointer;
+        transition: all 0.5s ease-in-out;
+    }
+    #contributionsInner{
+        display: flex;
+        justify-content: space-around;
+        /* position: fixed; */
+        bottom: 0;
+        width: 100%;
+        height: 40vh;
+        background-color: rgb(54, 54, 54);
+        padding-top: 50px;
+        /* z-index: -1; */
+    }
+    #contInBox {
+        background-color: rgba(238, 238, 238, 0.76);
+        border-radius: 100%;
+        box-shadow: 4px 4px grey;
+        height: 250px;
+        width: 250px;
+        display: flex;
+        justify-content: center;
+    }
+    .link{
+        padding: 40px;
+        text-align: center;
+    }
+</style>
+</body>
+</html>
